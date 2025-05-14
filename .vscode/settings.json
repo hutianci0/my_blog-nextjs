@@ -1,0 +1,14 @@
+{
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "NEXT_USER",
+      "database": "NEXT_USER",
+      "username": "tiancihu"
+    }
+  ],
+  "postman.settings.dotenv-detection-notification-visibility": false
+}

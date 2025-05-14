@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model NEXT_USER {
+  id        Int         @id @default(autoincrement())
+  nickname  String
+  avatar    String?
+  Job       String?
+  Introduce String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  NEXT_AUTH NEXT_AUTH[]
+  Post      Post[]
+}
+
+model NEXT_AUTH {
+  id            Int           @id @default(autoincrement())
+  UserId        Int
+  User          NEXT_USER     @relation(fields: [UserId], references: [id])
+  Identity_type Identity_type @default(phone)
+  Identifier    String
+  credential    String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  title     String
+  content   String
+  views     Int       @default(0)
+  isDelete  Boolean   @default(false)
+  User      NEXT_USER @relation(fields: [UserId], references: [id])
+  UserId    Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+enum Identity_type {
+  phone
+  github
+}
