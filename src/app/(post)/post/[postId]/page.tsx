@@ -1,11 +1,13 @@
 import { findPostById, update } from '@/app/actions/publish'
+import CommenetList from '@/components/cmtList'
 import { getSession } from '@/lib/getSession'
 import Form from 'next/form'
 import { notFound } from 'next/navigation'
 import ReactMarkdown from 'react-markdown'
 
-export default async function PostDetail({ params }: { params: { id: string } }) {
-    const post = await findPostById(+params.id)
+export default async function PostDetail({ params }: { params: Promise<{ postId: string }> }) {
+    const { postId } = await params
+    const post = await findPostById(+postId)
     const session = await getSession()
     if (!post) return notFound()
 
@@ -27,29 +29,26 @@ export default async function PostDetail({ params }: { params: { id: string } })
                         </div>
                     </div>
                 </header>
-
                 {isAuthor ? (
                     <input
                         name="title"
                         defaultValue={post.title}
-                        className="mb-4 w-full border-b text-2xl font-bold outline-none"
+                        className="mb-4 w-full text-2xl font-bold outline-none"
                     />
                 ) : (
                     <h1 className="mb-4 text-2xl font-bold">{post.title}</h1>
                 )}
-
                 {isAuthor ? (
                     <textarea
                         name="content"
                         defaultValue={post.content}
-                        className="mb-4 h-60 w-full rounded border p-2"
+                        className="mb-4 h-60 w-full rounded p-2 outline-0"
                     />
                 ) : (
                     <div className="prose">
                         <ReactMarkdown>{post.content}</ReactMarkdown>
                     </div>
                 )}
-
                 {isAuthor && (
                     <button
                         type="submit"
@@ -59,6 +58,7 @@ export default async function PostDetail({ params }: { params: { id: string } })
                     </button>
                 )}
             </Form>
+            <CommenetList postId={postId} />
         </div>
     )
 }
